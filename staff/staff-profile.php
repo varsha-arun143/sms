@@ -255,6 +255,67 @@ if (!$staff) {
             font-size: 14px;
             font-weight: 500;
         }
+        
+        /* Toggle switch styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-text {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        input:checked + .slider + .toggle-text {
+            color: #4CAF50;
+        }
     </style>
 </head>
 
@@ -371,29 +432,23 @@ if (!$staff) {
                                                     <h4 class="info-title"><i class="fas fa-bell"></i> Emergency Information</h4>
 
                                                     <div class="row">
-    <div class="col-md-6">
-        <p class="info-label">Emergency Staff</p>
-        <p class="info-value">
-            <button class="btn btn-sm badge-custom <?= ($staff['is_emergency_staff'] == 1) ? 'badge-success' : 'badge-warning' ?> toggle-emergency-staff"
-                    data-staff-id="<?= $staff['id'] ?>"
-                    data-current-value="<?= $staff['is_emergency_staff'] ?>">
-                <?= ($staff['is_emergency_staff'] == 1) ? 'Yes' : 'No' ?>
-            </button>
-        </p>
-    </div>
-    <div class="col-md-6">
-        <p class="info-label">Emergency Availability</p>
-        <p class="info-value">
-            <button class="btn btn-sm badge-custom <?= ($staff['emergency_availability'] == 1) ? 'badge-success' : 'badge-warning' ?> toggle-emergency-availability"
-                    data-staff-id="<?= $staff['id'] ?>"
-                    data-current-value="<?= $staff['emergency_availability'] ?>">
-                <?= ($staff['emergency_availability'] == 1) ? 'Available' : 'Not Available' ?>
-            </button>
-        </p>
-    </div>
-</div>
-
-
+                                                        <div class="col-md-6">
+                                                            <p class="info-label">Emergency Staff</p>
+                                                            <p class="info-value">
+                                                                <span class="badge-custom <?= ($staff['is_emergency_staff'] == 1) ? 'badge-success' : 'badge-warning' ?>">
+                                                                    <?= ($staff['is_emergency_staff'] == 1) ? 'Yes' : 'No' ?>
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="info-label">Emergency Availability</p>
+                                                            <p class="info-value">
+                                                                <span class="badge-custom <?= ($staff['emergency_availability'] == 1) ? 'badge-success' : 'badge-warning' ?>">
+                                                                    <?= ($staff['emergency_availability'] == 1) ? 'Available' : 'Not Available' ?>
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -494,69 +549,5 @@ if (!$staff) {
     </div>
 
     <?php include 'includes/scripts.php'; ?>
-    <script>
-$(document).ready(function() {
-    // Toggle Emergency Staff status
-    $('.toggle-emergency-staff').click(function() {
-        var button = $(this);
-        var staffId = button.data('staff-id');
-        var currentValue = button.data('current-value');
-        var newValue = currentValue == 1 ? 0 : 1;
-        
-        $.ajax({
-            url: 'update_staff_status.php',
-            type: 'POST',
-            data: {
-                staff_id: staffId,
-                field: 'is_emergency_staff',
-                value: newValue
-            },
-            success: function(response) {
-                if(response.success) {
-                    button.data('current-value', newValue);
-                    button.toggleClass('badge-success badge-warning');
-                    button.text(newValue == 1 ? 'Yes' : 'No');
-                } else {
-                    alert('Error updating status');
-                }
-            },
-            error: function() {
-                alert('Error connecting to server');
-            }
-        });
-    });
-    
-    // Toggle Emergency Availability status
-    $('.toggle-emergency-availability').click(function() {
-        var button = $(this);
-        var staffId = button.data('staff-id');
-        var currentValue = button.data('current-value');
-        var newValue = currentValue == 1 ? 0 : 1;
-        
-        $.ajax({
-            url: 'update_staff_status.php',
-            type: 'POST',
-            data: {
-                staff_id: staffId,
-                field: 'emergency_availability',
-                value: newValue
-            },
-            success: function(response) {
-                if(response.success) {
-                    button.data('current-value', newValue);
-                    button.toggleClass('badge-success badge-warning');
-                    button.text(newValue == 1 ? 'Available' : 'Not Available');
-                } else {
-                    alert('Error updating availability');
-                }
-            },
-            error: function() {
-                alert('Error connecting to server');
-            }
-        });
-    });
-});
-</script>
 </body>
-
 </html>
