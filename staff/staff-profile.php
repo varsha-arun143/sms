@@ -41,7 +41,7 @@ if (!$staff) {
             --warning-color: #ffcc00;
             --danger-color: #f44336;
         }
-
+        
         .profile-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             padding: 40px 0;
@@ -50,7 +50,7 @@ if (!$staff) {
             position: relative;
             overflow: hidden;
         }
-
+        
         .profile-header::before {
             content: "";
             position: absolute;
@@ -72,7 +72,7 @@ if (!$staff) {
             position: relative;
             transition: all 0.3s ease;
         }
-
+        
         .profile-pic:hover {
             transform: scale(1.05);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
@@ -83,7 +83,7 @@ if (!$staff) {
             margin-top: 20px;
             font-size: 28px;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .profile-email {
@@ -101,12 +101,12 @@ if (!$staff) {
             font-size: 14px;
             margin-top: 5px;
         }
-
+        
         .status-active {
             background-color: rgba(75, 181, 67, 0.2);
             color: var(--success-color);
         }
-
+        
         .status-inactive {
             background-color: rgba(244, 67, 54, 0.2);
             color: var(--danger-color);
@@ -119,7 +119,7 @@ if (!$staff) {
             border: none;
             transition: all 0.3s ease;
         }
-
+        
         .info-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -135,7 +135,7 @@ if (!$staff) {
             display: flex;
             align-items: center;
         }
-
+        
         .info-title i {
             margin-right: 10px;
             font-size: 24px;
@@ -156,7 +156,7 @@ if (!$staff) {
             padding-left: 10px;
             border-left: 3px solid var(--primary-color);
         }
-
+        
         .info-value i {
             margin-right: 10px;
             width: 20px;
@@ -170,22 +170,22 @@ if (!$staff) {
             font-weight: 600;
             font-size: 12px;
         }
-
+        
         .badge-primary {
             background-color: rgba(67, 97, 238, 0.1);
             color: var(--primary-color);
         }
-
+        
         .badge-success {
             background-color: rgba(75, 181, 67, 0.1);
             color: var(--success-color);
         }
-
+        
         .badge-warning {
             background-color: rgba(255, 204, 0, 0.1);
             color: var(--warning-color);
         }
-
+        
         .badge-danger {
             background-color: rgba(244, 67, 54, 0.1);
             color: var(--danger-color);
@@ -201,17 +201,17 @@ if (!$staff) {
             box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
             transition: all 0.3s ease;
         }
-
+        
         .btn-edit:hover {
             color: white;
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
         }
-
+        
         .btn-edit i {
             margin-right: 8px;
         }
-
+        
         .verification-badge {
             display: inline-flex;
             align-items: center;
@@ -222,31 +222,31 @@ if (!$staff) {
             margin-right: 5px;
             margin-bottom: 5px;
         }
-
+        
         .verification-badge i {
             margin-right: 5px;
         }
-
+        
         .verified {
             background-color: rgba(75, 181, 67, 0.1);
             color: var(--success-color);
         }
-
+        
         .not-verified {
             background-color: rgba(108, 117, 125, 0.1);
             color: #6c757d;
         }
-
+        
         .profile-section {
             margin-bottom: 30px;
         }
-
+        
         .skills-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-
+        
         .skill-item {
             background-color: rgba(67, 97, 238, 0.1);
             color: var(--primary-color);
@@ -430,29 +430,36 @@ if (!$staff) {
                                             <div class="info-card">
                                                 <div class="card-body">
                                                     <h4 class="info-title"><i class="fas fa-bell"></i> Emergency Information</h4>
-
+                                                    
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <p class="info-label">Emergency Staff</p>
-                                                            <p class="info-value">
-                                                                <span class="badge-custom <?= ($staff['is_emergency_staff'] == 1) ? 'badge-success' : 'badge-warning' ?>">
-                                                                    <?= ($staff['is_emergency_staff'] == 1) ? 'Yes' : 'No' ?>
+                                                            <div class="toggle-container">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="emergencyStaffToggle" <?= $staff['is_emergency_staff'] == 1 ? 'checked' : '' ?>>
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                                <span class="toggle-text" id="emergencyStaffText">
+                                                                    <?= $staff['is_emergency_staff'] == 1 ? 'Yes' : 'No' ?>
                                                                 </span>
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <p class="info-label">Emergency Availability</p>
-                                                            <p class="info-value">
-                                                                <span class="badge-custom <?= ($staff['emergency_availability'] == 1) ? 'badge-success' : 'badge-warning' ?>">
-                                                                    <?= ($staff['emergency_availability'] == 1) ? 'Available' : 'Not Available' ?>
+                                                            <div class="toggle-container">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="emergencyAvailabilityToggle" <?= $staff['emergency_availability'] == 1 ? 'checked' : '' ?>>
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                                <span class="toggle-text" id="emergencyAvailabilityText">
+                                                                    <?= $staff['emergency_availability'] == 1 ? 'Yes' : 'No' ?>
                                                                 </span>
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <!-- Professional Information Column -->
@@ -461,7 +468,7 @@ if (!$staff) {
                                             <div class="info-card">
                                                 <div class="card-body">
                                                     <h4 class="info-title"><i class="fas fa-briefcase"></i> Professional Information</h4>
-
+                                                    
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <p class="info-label">Join Date</p>
@@ -502,7 +509,7 @@ if (!$staff) {
                                             <div class="info-card">
                                                 <div class="card-body">
                                                     <h4 class="info-title"><i class="fas fa-shield-alt"></i> Verification Status</h4>
-
+                                                    
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <p class="info-label">Photo Verification</p>
@@ -519,7 +526,7 @@ if (!$staff) {
                                                             </span>
                                                         </div>
                                                     </div>
-
+                                                    
                                                     <p class="info-label">Overall Verification</p>
                                                     <span class="verification-badge <?= ($staff['verification_status'] == 'approved') ? 'verified' : ($staff['verification_status'] == 'pending' ? 'not-verified' : 'badge-danger') ?>">
                                                         <i class="fas <?= ($staff['verification_status'] == 'approved') ? 'fa-check-circle' : ($staff['verification_status'] == 'pending' ? 'fa-clock' : 'fa-times-circle') ?>"></i>
@@ -531,7 +538,7 @@ if (!$staff) {
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="card-footer text-center bg-transparent">
                                 <a href="edit_profile.php?id=<?= $staff['staff_id'] ?>" class="btn btn-edit">
                                     <i class="fas fa-edit"></i> Edit Profile
@@ -549,5 +556,47 @@ if (!$staff) {
     </div>
 
     <?php include 'includes/scripts.php'; ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Emergency Staff Toggle
+        const emergencyStaffToggle = document.getElementById('emergencyStaffToggle');
+        const emergencyStaffText = document.getElementById('emergencyStaffText');
+        
+        emergencyStaffToggle.addEventListener('change', function() {
+            const isEmergencyStaff = this.checked ? 1 : 0;
+            emergencyStaffText.textContent = this.checked ? 'Yes' : 'No';
+            updateProfileField('is_emergency_staff', isEmergencyStaff);
+        });
+
+        // Emergency Availability Toggle
+        const emergencyAvailabilityToggle = document.getElementById('emergencyAvailabilityToggle');
+        const emergencyAvailabilityText = document.getElementById('emergencyAvailabilityText');
+        
+        emergencyAvailabilityToggle.addEventListener('change', function() {
+            const isAvailable = this.checked ? 1 : 0;
+            emergencyAvailabilityText.textContent = this.checked ? 'Yes' : 'No';
+            updateProfileField('emergency_availability', isAvailable);
+        });
+
+        function updateProfileField(field, value) {
+            const formData = new FormData();
+            formData.append('field', field);
+            formData.append('value', value);
+
+            fetch('update_staff_status.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                // Show success message if needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+    </script>
 </body>
 </html>
