@@ -255,6 +255,67 @@ if (!$staff) {
             font-size: 14px;
             font-weight: 500;
         }
+        
+        /* Toggle switch styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-text {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        input:checked + .slider + .toggle-text {
+            color: #4CAF50;
+        }
     </style>
 </head>
 
@@ -373,19 +434,27 @@ if (!$staff) {
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <p class="info-label">Emergency Staff</p>
-                                                            <p class="info-value">
-                                                                <span class="badge-custom <?= ($staff['is_emergency_staff'] == 1) ? 'badge-success' : 'badge-warning' ?>">
-                                                                    <?= ($staff['is_emergency_staff'] == 1) ? 'Yes' : 'No' ?>
+                                                            <div class="toggle-container">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="emergencyStaffToggle" <?= $staff['is_emergency_staff'] == 1 ? 'checked' : '' ?>>
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                                <span class="toggle-text" id="emergencyStaffText">
+                                                                    <?= $staff['is_emergency_staff'] == 1 ? 'Yes' : 'No' ?>
                                                                 </span>
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <p class="info-label">Emergency Availability</p>
-                                                            <p class="info-value">
-                                                                <span class="badge-custom <?= ($staff['emergency_availability'] == 1) ? 'badge-success' : 'badge-warning' ?>">
-                                                                    <?= ($staff['emergency_availability'] == 1) ? 'Available' : 'Not Available' ?>
+                                                            <div class="toggle-container">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="emergencyAvailabilityToggle" <?= $staff['emergency_availability'] == 1 ? 'checked' : '' ?>>
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                                <span class="toggle-text" id="emergencyAvailabilityText">
+                                                                    <?= $staff['emergency_availability'] == 1 ? 'Yes' : 'No' ?>
                                                                 </span>
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -487,6 +556,47 @@ if (!$staff) {
     </div>
 
     <?php include 'includes/scripts.php'; ?>
-</body>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Emergency Staff Toggle
+        const emergencyStaffToggle = document.getElementById('emergencyStaffToggle');
+        const emergencyStaffText = document.getElementById('emergencyStaffText');
+        
+        emergencyStaffToggle.addEventListener('change', function() {
+            const isEmergencyStaff = this.checked ? 1 : 0;
+            emergencyStaffText.textContent = this.checked ? 'Yes' : 'No';
+            updateProfileField('is_emergency_staff', isEmergencyStaff);
+        });
 
+        // Emergency Availability Toggle
+        const emergencyAvailabilityToggle = document.getElementById('emergencyAvailabilityToggle');
+        const emergencyAvailabilityText = document.getElementById('emergencyAvailabilityText');
+        
+        emergencyAvailabilityToggle.addEventListener('change', function() {
+            const isAvailable = this.checked ? 1 : 0;
+            emergencyAvailabilityText.textContent = this.checked ? 'Yes' : 'No';
+            updateProfileField('emergency_availability', isAvailable);
+        });
+
+        function updateProfileField(field, value) {
+            const formData = new FormData();
+            formData.append('field', field);
+            formData.append('value', value);
+
+            fetch('update_staff_status.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                // Show success message if needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+    </script>
+</body>
 </html>
