@@ -1,27 +1,36 @@
 <?php
-// update_staff_status.php
-require_once 'db_connection.php'; // Your database connection file
+include('../db_config.php');
 
-header('Content-Type: application/json');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['field'], $_POST['value'])) {
+    session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $staffId = $_POST['staff_id'] ?? null;
-    $field = $_POST['field'] ?? null;
-    $value = $_POST['value'] ?? null;
-    
-    if ($staffId && $field && in_array($field, ['is_emergency_staff', 'emergency_availability'])) {
-        try {
-            $stmt = $pdo->prepare("UPDATE staff SET $field = :value WHERE id = :id");
-            $stmt->execute([':value' => $value, ':id' => $staffId]);
-            
-            echo json_encode(['success' => true]);
-        } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-        }
-    } else {
-        echo json_encode(['success' => false, 'error' => 'Invalid parameters']);
+    // Ensure user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        echo "Unauthorized access!";
+        exit();
     }
+
+    $userId = $_SESSION['user_id'];
+    $field = $_POST['field'];
+    $value = $_POST['value'];
+
+    // Check if the field is valid
+    if (!in_array($field, ['is_emergency_staff', 'emergency_availability'])) {
+        echo "Invalid field!";
+        exit();
+    }
+
+    // Prepare and execute the update query
+    $stmt = $conn->prepare("UPDATE staff SET $field = ? WHERE user_id = ?");
+    $stmt->bind_param("ii", $value, $userId);
+
+    if ($stmt->execute()) {
+        echo "Profile updated successfully!";
+    } else {
+        echo "Error updating profile!";
+    }
+    $stmt->close();
 } else {
-    echo json_encode(['success' => false, 'error' => 'Invalid request method']);
+    echo "Invalid request!";
 }
 ?>
